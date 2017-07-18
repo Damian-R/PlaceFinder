@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">PlaceFinder</string>
     <string name="title_activity_maps">Map</string>
+    <string name="string_restaurant">Restaurants</string>
+    <string name="string_pharmacy">Pharmacies</string>
+    <string name="string_bank">Banks</string>
 </resources>
