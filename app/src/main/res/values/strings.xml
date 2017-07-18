@@ -4,4 +4,6 @@
     <string name="string_restaurant">Restaurants</string>
     <string name="string_pharmacy">Pharmacies</string>
     <string name="string_bank">Banks</string>
+    <string name="open">Open</string>
+    <string name="close">Close</string>
 </resources>
