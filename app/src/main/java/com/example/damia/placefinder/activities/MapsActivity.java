@@ -5,17 +5,26 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.internal.NavigationMenu;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Toast;
 
 import com.example.damia.placefinder.R;
+import com.example.damia.placefinder.data.GetNearbyPlaceData;
+import com.example.damia.placefinder.data.GetNearbyPlacesData;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
@@ -28,15 +37,22 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
+public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, NavigationView.OnNavigationItemSelectedListener {
 
     private GoogleMap mMap;
     private GoogleApiClient googleApiClient;
+    private DrawerLayout mDrawerLayout;
+    private ActionBarDrawerToggle mToggle;
+    private NavigationView navigationMenu;
 
     final int PERMISSION_LOCATION_CODE = 1;
 
-    private DrawerLayout mDrawerLayout;
-    private ActionBarDrawerToggle mToggle;
+    private MarkerOptions userMarker;
+    Toast toast;
+
+    private final String MAP_RADIUS = "500";
+
+    GetNearbyPlacesData data;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,15 +67,63 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .addApi(LocationServices.API)
                 .build();
 
-        mDrawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
-        mToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.open, R.string.close);
+        data = GetNearbyPlacesData.getInstance(this);
 
-        mDrawerLayout.addDrawerListener(mToggle);
+        Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
+        navigationMenu = (NavigationView) findViewById(R.id.navigation_menu);
+
+        mDrawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
+        mToggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar, R.string.open, R.string.close){
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+                mDrawerLayout.bringToFront();
+                mDrawerLayout.requestLayout();
+            }
+
+            @Override
+            public boolean onOptionsItemSelected(MenuItem item) {
+                navigationMenu.bringToFront();
+                return super.onOptionsItemSelected(item);
+            }
+        };
+
+        mDrawerLayout.setDrawerListener(mToggle);
         mToggle.syncState();
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        navigationMenu.setNavigationItemSelectedListener(this);
     }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        Log.v("NAV", "Navigation item selected");
+        Bundle URLInfo = new Bundle();
+        URLInfo.putString("radius", MAP_RADIUS);
+        URLInfo.putString("location", userMarker.getPosition().latitude + "," + userMarker.getPosition().longitude);
+        switch (item.getItemId()){
+            case R.id.nav_restaurant: {
+                URLInfo.putString("type", "restaurant");
+                data.downloadPlacesData(URLInfo);
+                break;
+            }
+            case R.id.nav_pharmacy: {
+                URLInfo.putString("type", "pharmacy");
+                data.downloadPlacesData(URLInfo);
+                break;
+            }
+            case R.id.nav_bank: {
+                URLInfo.putString("type", "bank");
+                data.downloadPlacesData(URLInfo);
+                break;
+            }
+        }
+
+        mDrawerLayout.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -107,7 +171,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void onLocationChanged(Location location) {
-        MarkerOptions userMarker = new MarkerOptions().position(new LatLng(location.getLatitude(), location.getLongitude()));
+        userMarker = new MarkerOptions().position(new LatLng(location.getLatitude(), location.getLongitude()));
         mMap.addMarker(userMarker);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(userMarker.getPosition(), 15));
     }

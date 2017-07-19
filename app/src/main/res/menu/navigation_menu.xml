@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/nav_restaurant"
-        android:title="@string/string_restaurant"></item>
+    <group android:checkableBehavior="single">
+        <item android:id="@+id/nav_restaurant"
+            android:title="@string/string_restaurant"
+            android:icon="@drawable/ic_restaurant_black_24dp"></item>
 
-    <item android:id="@+id/nav_pharmacy"
-        android:title="@string/string_pharmacy"></item>
+        <item android:id="@+id/nav_pharmacy"
+            android:title="@string/string_pharmacy"
+            android:icon="@drawable/ic_local_pharmacy_black_24dp"></item>
 
-    <item android:id="@+id/nav_bank"
-        android:title="@string/string_bank"></item>
+        <item android:id="@+id/nav_bank"
+            android:title="@string/string_bank"
+            android:icon="@drawable/ic_account_balance_black_24dp"></item>
+    </group>
 
 </menu>
