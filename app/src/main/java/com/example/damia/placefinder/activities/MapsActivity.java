@@ -203,36 +203,26 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void placesLoaded(ArrayList<HashMap<String, String>> list) {
         Log.v("PLACES", "adding places");
+        MarkerOptions markerOptions = new MarkerOptions();
+
+        // build a resource path using the type of place
+        String type = URLInfo.getString("type");
+        String resourcePath = "drawable/pin_" + type;
+
+        // create a resource path out of the String created
+        int resource = getResources().getIdentifier(resourcePath, null, this.getPackageName());
+
+        // set the marker icon according to the place type
+        markerOptions.icon(BitmapDescriptorFactory.fromResource(resource));
+
         for(int i = 0; i < list.size(); i++){
-            MarkerOptions markerOptions = new MarkerOptions();
+            // get the latitude and longitude
             double lat = Double.parseDouble(list.get(i).get("lat"));
             double lng = Double.parseDouble(list.get(i).get("lng"));
-
-            String type = URLInfo.getString("type");
-            switch(type){
-                case "restaurant":{
-                    markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.pin_restaurant));
-                    break;
-                }
-                case "pharmacy":{
-                    markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.pin_pharmacy));
-                    break;
-                }
-                case "bank":{
-                    markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.pin_bank));
-                    break;
-                }
-            }
-
+            // set the marker position and title
             markerOptions.position(new LatLng(lat, lng));
             markerOptions.title(list.get(i).get("name"));
             mMap.addMarker(markerOptions);
         }
-    }
-
-    public Bitmap resizeMapIcons(String iconName, int width, int height){
-        Bitmap imageBitmap = BitmapFactory.decodeResource(getResources(),getResources().getIdentifier(iconName, "drawable", getPackageName()));
-        Bitmap resizedBitmap = Bitmap.createScaledBitmap(imageBitmap, width, height, false);
-        return resizedBitmap;
     }
 }
