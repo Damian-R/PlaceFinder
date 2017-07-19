@@ -2,6 +2,8 @@ package com.example.damia.placefinder.activities;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -33,6 +35,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -51,6 +54,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     final int PERMISSION_LOCATION_CODE = 1;
 
     private MarkerOptions userMarker;
+    private Bundle URLInfo;
 
     private final String MAP_RADIUS = "500";
 
@@ -102,7 +106,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         Log.v("NAV", "Navigation item selected");
-        Bundle URLInfo = new Bundle();
+        URLInfo = new Bundle();
         URLInfo.putString("radius", MAP_RADIUS);
         URLInfo.putString("location", userMarker.getPosition().latitude + "," + userMarker.getPosition().longitude);
         mMap.clear();
@@ -203,9 +207,32 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             MarkerOptions markerOptions = new MarkerOptions();
             double lat = Double.parseDouble(list.get(i).get("lat"));
             double lng = Double.parseDouble(list.get(i).get("lng"));
+
+            String type = URLInfo.getString("type");
+            switch(type){
+                case "restaurant":{
+                    markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.pin_restaurant));
+                    break;
+                }
+                case "pharmacy":{
+                    markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.pin_pharmacy));
+                    break;
+                }
+                case "bank":{
+                    markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.pin_bank));
+                    break;
+                }
+            }
+
             markerOptions.position(new LatLng(lat, lng));
             markerOptions.title(list.get(i).get("name"));
             mMap.addMarker(markerOptions);
         }
+    }
+
+    public Bitmap resizeMapIcons(String iconName, int width, int height){
+        Bitmap imageBitmap = BitmapFactory.decodeResource(getResources(),getResources().getIdentifier(iconName, "drawable", getPackageName()));
+        Bitmap resizedBitmap = Bitmap.createScaledBitmap(imageBitmap, width, height, false);
+        return resizedBitmap;
     }
 }
