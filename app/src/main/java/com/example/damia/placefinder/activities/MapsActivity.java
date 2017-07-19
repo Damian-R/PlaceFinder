@@ -23,7 +23,6 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.example.damia.placefinder.R;
-import com.example.damia.placefinder.data.GetNearbyPlaceData;
 import com.example.damia.placefinder.data.GetNearbyPlacesData;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -37,7 +36,11 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, NavigationView.OnNavigationItemSelectedListener {
+import java.util.ArrayList;
+import java.util.HashMap;
+
+public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, NavigationView.OnNavigationItemSelectedListener
+, GetNearbyPlacesData.OnPlacesLoadedListener{
 
     private GoogleMap mMap;
     private GoogleApiClient googleApiClient;
@@ -48,11 +51,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     final int PERMISSION_LOCATION_CODE = 1;
 
     private MarkerOptions userMarker;
-    Toast toast;
 
     private final String MAP_RADIUS = "500";
 
     GetNearbyPlacesData data;
+    ArrayList<HashMap<String, String>> placeList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,20 +105,21 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         Bundle URLInfo = new Bundle();
         URLInfo.putString("radius", MAP_RADIUS);
         URLInfo.putString("location", userMarker.getPosition().latitude + "," + userMarker.getPosition().longitude);
+        mMap.clear();
         switch (item.getItemId()){
             case R.id.nav_restaurant: {
                 URLInfo.putString("type", "restaurant");
-                data.downloadPlacesData(URLInfo);
+                placeList = data.downloadPlacesData(URLInfo);
                 break;
             }
             case R.id.nav_pharmacy: {
                 URLInfo.putString("type", "pharmacy");
-                data.downloadPlacesData(URLInfo);
+                placeList = data.downloadPlacesData(URLInfo);
                 break;
             }
             case R.id.nav_bank: {
                 URLInfo.putString("type", "bank");
-                data.downloadPlacesData(URLInfo);
+                placeList = data.downloadPlacesData(URLInfo);
                 break;
             }
         }
@@ -189,6 +193,19 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, request, this);
         }catch(SecurityException e){
             Log.v("SECURITY E", e.getLocalizedMessage());
+        }
+    }
+
+    @Override
+    public void placesLoaded(ArrayList<HashMap<String, String>> list) {
+        Log.v("PLACES", "adding places");
+        for(int i = 0; i < list.size(); i++){
+            MarkerOptions markerOptions = new MarkerOptions();
+            double lat = Double.parseDouble(list.get(i).get("lat"));
+            double lng = Double.parseDouble(list.get(i).get("lng"));
+            markerOptions.position(new LatLng(lat, lng));
+            markerOptions.title(list.get(i).get("name"));
+            mMap.addMarker(markerOptions);
         }
     }
 }
