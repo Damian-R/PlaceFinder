@@ -31,19 +31,13 @@ public class LocationsAdapter extends RecyclerView.Adapter<LocationsViewHolder>{
 
     @Override
     public void onBindViewHolder(LocationsViewHolder holder, int position) {
-        final HashMap<String, String> location = locations.get(position);
+        HashMap<String, String> location = locations.get(position);
         holder.updateUI(location);
-
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
     }
 
     @Override
     public int getItemCount() {
         return locations.size();
     }
+
 }

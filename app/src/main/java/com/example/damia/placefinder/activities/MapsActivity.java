@@ -236,8 +236,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private void createLocationsListFragment(ArrayList<HashMap<String, String>> list) {
         FragmentManager fm = getSupportFragmentManager();
-        LocationsListFragment fragment = (LocationsListFragment) fm.findFragmentById(R.id.container_locations);
-        fragment = LocationsListFragment.newInstance();
+        LocationsListFragment fragment = LocationsListFragment.newInstance();
         fm.beginTransaction().add(R.id.container_locations, fragment).commit();
     }
 
