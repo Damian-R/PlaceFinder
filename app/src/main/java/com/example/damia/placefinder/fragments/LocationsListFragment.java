@@ -1,5 +1,6 @@
 package com.example.damia.placefinder.fragments;
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,6 +13,7 @@ import android.view.ViewGroup;
 import com.example.damia.placefinder.R;
 import com.example.damia.placefinder.activities.MapsActivity;
 import com.example.damia.placefinder.adapters.LocationsAdapter;
+import com.example.damia.placefinder.data.Place;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,14 +23,15 @@ public class LocationsListFragment extends Fragment{
 
     private static final String ARG_PARAM1 = "param1";
 
-    private ArrayList<HashMap<String, String>> mParam1;
+    private ArrayList<Place> mParam1;
     public LocationsAdapter adapter;
 
     GetLocationsData getLocationsData;
 
     public interface GetLocationsData{
-        ArrayList<HashMap<String, String>> getList();
+        ArrayList<Place> getList();
     }
+
 
     public LocationsListFragment() {
         // Required empty public constructor
@@ -52,7 +55,7 @@ public class LocationsListFragment extends Fragment{
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_locations_list, container, false);
-        adapter = new LocationsAdapter(mParam1);
+        adapter = new LocationsAdapter(mParam1, getContext());
 
         RecyclerView recyclerView = (RecyclerView)v.findViewById(R.id.recycler_locations);
         recyclerView.setHasFixedSize(true);

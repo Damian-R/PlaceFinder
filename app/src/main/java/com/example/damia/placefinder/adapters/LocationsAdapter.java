@@ -1,11 +1,15 @@
 package com.example.damia.placefinder.adapters;
 
+import android.content.Context;
+import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.damia.placefinder.R;
+import com.example.damia.placefinder.data.GetNearbyPlacesData;
+import com.example.damia.placefinder.data.Place;
 import com.example.damia.placefinder.holders.LocationsViewHolder;
 
 import java.util.ArrayList;
@@ -17,10 +21,16 @@ import java.util.HashMap;
 
 public class LocationsAdapter extends RecyclerView.Adapter<LocationsViewHolder>{
 
-    ArrayList<HashMap<String, String>> locations;
+    ArrayList<Place> locations;
 
-    public LocationsAdapter(ArrayList<HashMap<String, String>> locations) {
+    Context context;
+
+    GetNearbyPlacesData data;
+
+    public LocationsAdapter(ArrayList<Place> locations, Context context) {
         this.locations = locations;
+        this.context = context;
+        data = GetNearbyPlacesData.getInstance(context);
     }
 
     @Override
@@ -31,7 +41,7 @@ public class LocationsAdapter extends RecyclerView.Adapter<LocationsViewHolder>{
 
     @Override
     public void onBindViewHolder(LocationsViewHolder holder, int position) {
-        HashMap<String, String> location = locations.get(position);
+        Place location = locations.get(position);
         holder.updateUI(location);
     }
 

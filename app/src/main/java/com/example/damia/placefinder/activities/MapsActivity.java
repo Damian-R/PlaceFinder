@@ -29,6 +29,7 @@ import android.widget.Toast;
 
 import com.example.damia.placefinder.R;
 import com.example.damia.placefinder.data.GetNearbyPlacesData;
+import com.example.damia.placefinder.data.Place;
 import com.example.damia.placefinder.fragments.LocationsListFragment;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -63,7 +64,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private final String MAP_RADIUS = "500";
 
     GetNearbyPlacesData data;
-    ArrayList<HashMap<String, String>> placeList;
+    ArrayList<Place> placeList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -206,7 +207,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     @Override
-    public void placesLoaded(ArrayList<HashMap<String, String>> list) {
+    public void placesLoaded(ArrayList<Place> list) {
         Log.v("PLACES", "adding places");
         MarkerOptions markerOptions = new MarkerOptions();
 
@@ -222,26 +223,26 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         for(int i = 0; i < list.size(); i++){
             // get the latitude and longitude
-            double lat = Double.parseDouble(list.get(i).get("lat"));
-            double lng = Double.parseDouble(list.get(i).get("lng"));
+            double lat = list.get(i).getLat();
+            double lng = list.get(i).getLng();
             // set the marker position and title
             markerOptions.position(new LatLng(lat, lng));
-            markerOptions.title(list.get(i).get("name"));
+            markerOptions.title(list.get(i).getName());
             mMap.addMarker(markerOptions);
         }
-
-        createLocationsListFragment(list);
+        createLocationsListFragment();
 
     }
 
-    private void createLocationsListFragment(ArrayList<HashMap<String, String>> list) {
+    private void createLocationsListFragment() {
         FragmentManager fm = getSupportFragmentManager();
         LocationsListFragment fragment = LocationsListFragment.newInstance();
         fm.beginTransaction().add(R.id.container_locations, fragment).commit();
     }
 
     @Override
-    public ArrayList<HashMap<String, String>> getList() {
+    public ArrayList<Place> getList() {
         return placeList;
     }
+
 }

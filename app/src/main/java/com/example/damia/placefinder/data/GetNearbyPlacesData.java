@@ -1,14 +1,17 @@
 package com.example.damia.placefinder.data;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.common.images.ImageManager;
 import com.google.android.gms.maps.model.LatLng;
 
 import org.json.JSONArray;
@@ -25,16 +28,22 @@ public class GetNearbyPlacesData {
     private static GetNearbyPlacesData instance = null;
     public RequestQueue requestQueue;
 
-    private final String URL_BASE = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?";
+    private final String URL_BASE_PLACES = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?";
+    private final String URL_BASE_IMAGE = "https://maps.googleapis.com/maps/api/place/photo?";
+    private final String URL_IMAGE_WIDTH = "maxwidth=300";
+    private final String URL_IMAGE_HEIGHT = "&maxheight=300";
     private final String URL_LOCATION = "location=";
     private final String URL_RADIUS = "&radius=";
     private final String URL_TYPE = "&type=";
     private final String URL_SENSOR = "&sensor=true";
     private final String URL_KEY = "&key=AIzaSyA0MtUzpa2HeoONIHTt22T6P9SxTUXPbjA";
 
+    Context context;
+
     public OnPlacesLoadedListener onPlacesLoadedListener;
+
     public interface OnPlacesLoadedListener{
-        public void placesLoaded(ArrayList<HashMap<String, String>> list);
+        void placesLoaded(ArrayList<Place> list);
     }
 
     public static GetNearbyPlacesData getInstance(Context context) {
@@ -47,19 +56,26 @@ public class GetNearbyPlacesData {
     private GetNearbyPlacesData(Context context) {
         requestQueue = Volley.newRequestQueue(context.getApplicationContext());
         onPlacesLoadedListener = (OnPlacesLoadedListener) context;
+        this.context = context;
 
     }
 
-    private String buildURL(Bundle bundle){
-        String url = URL_BASE + URL_LOCATION + bundle.getString("location") + URL_RADIUS + bundle.getString("radius") + URL_TYPE + bundle.getString("type") + URL_SENSOR  + URL_KEY;
+    private String buildPlaceURL(Bundle bundle){
+        String url = URL_BASE_PLACES + URL_LOCATION + bundle.getString("location") + URL_RADIUS + bundle.getString("radius") + URL_TYPE + bundle.getString("type") + URL_SENSOR  + URL_KEY;
         Log.v("URL", url);
         return url;
     }
 
-    ArrayList<HashMap<String, String>> placesList;
+    private String buildImgURL(String imgKey){
+        String url = URL_BASE_IMAGE + URL_IMAGE_WIDTH + URL_IMAGE_HEIGHT + "&photoreference=" + imgKey + URL_KEY;
+        Log.v("IMGURL", url);
+        return url;
+    }
 
-    public ArrayList<HashMap<String, String>> downloadPlacesData(Bundle bundle){
-        String url = buildURL(bundle);
+    ArrayList<Place> placesList;
+
+    public ArrayList<Place> downloadPlacesData(Bundle bundle){
+        String url = buildPlaceURL(bundle);
 
         placesList = new ArrayList<>();
 
@@ -71,20 +87,28 @@ public class GetNearbyPlacesData {
                 try {
                     JSONArray results = response.getJSONArray("results");
                     for(int i = 0; i < results.length(); i++){
-                        HashMap<String, String> placeMap = new HashMap<>();
                         JSONObject main = results.getJSONObject(i);
                         JSONObject geo = main.getJSONObject("geometry");
                         JSONObject loc = geo.getJSONObject("location");
+                        String placeID = main.getString("place_id");
                         String name = main.getString("name");
                         String lat = loc.getString("lat");
                         String lng = loc.getString("lng");
+                        String photoID = null;
 
-                        placeMap.put("name", name);
-                        placeMap.put("lat", lat);
-                        placeMap.put("lng", lng);
+                        try {
+                            if (main.getJSONArray("photos") != null) {
+                                JSONArray photos = main.getJSONArray("photos");
+                                photoID = photos.getJSONObject(0).getString("photo_reference");
+                            }
+                        }catch (JSONException e){
+                            Log.v("JSON4", e.getLocalizedMessage());
+                        }
+
+                        Place place = new Place(photoID, name, placeID, Double.parseDouble(lat), Double.parseDouble(lng), context);
                         Log.v("NAME", name);
 
-                        placesList.add(placeMap);
+                        placesList.add(place);
 
                     }
                     onPlacesLoadedListener.placesLoaded(placesList);
@@ -106,4 +130,25 @@ public class GetNearbyPlacesData {
         return placesList;
     }
 
+    Bitmap bitmap;
+
+    public void downloadPlaceImage(String imageKey, final Place place){
+        String url = buildImgURL(imageKey);
+
+        ImageRequest imageRequest = new ImageRequest(url, new Response.Listener<Bitmap>() {
+            @Override
+            public void onResponse(Bitmap response) {
+                bitmap = response;
+                place.setImage(bitmap);
+                Log.v("IMG", "downloaded image");
+            }
+        }, 0, 0, null, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        });
+
+        requestQueue.add(imageRequest);
+    }
 }
