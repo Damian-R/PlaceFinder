@@ -12,20 +12,24 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.example.damia.placefinder.R;
 import com.example.damia.placefinder.data.GetNearbyPlacesData;
+import com.example.damia.placefinder.fragments.LocationsListFragment;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
@@ -43,7 +47,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, NavigationView.OnNavigationItemSelectedListener
-, GetNearbyPlacesData.OnPlacesLoadedListener{
+, GetNearbyPlacesData.OnPlacesLoadedListener, LocationsListFragment.GetLocationsData{
 
     private GoogleMap mMap;
     private GoogleApiClient googleApiClient;
@@ -109,6 +113,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         URLInfo = new Bundle();
         URLInfo.putString("radius", MAP_RADIUS);
         URLInfo.putString("location", userMarker.getPosition().latitude + "," + userMarker.getPosition().longitude);
+
         mMap.clear();
         switch (item.getItemId()){
             case R.id.nav_restaurant: {
@@ -224,5 +229,20 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             markerOptions.title(list.get(i).get("name"));
             mMap.addMarker(markerOptions);
         }
+
+        createLocationsListFragment(list);
+
+    }
+
+    private void createLocationsListFragment(ArrayList<HashMap<String, String>> list) {
+        FragmentManager fm = getSupportFragmentManager();
+        LocationsListFragment fragment = (LocationsListFragment) fm.findFragmentById(R.id.container_locations);
+        fragment = LocationsListFragment.newInstance();
+        fm.beginTransaction().add(R.id.container_locations, fragment).commit();
+    }
+
+    @Override
+    public ArrayList<HashMap<String, String>> getList() {
+        return placeList;
     }
 }

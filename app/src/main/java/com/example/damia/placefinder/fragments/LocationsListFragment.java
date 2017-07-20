@@ -1,0 +1,73 @@
+package com.example.damia.placefinder.fragments;
+
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
+import com.example.damia.placefinder.R;
+import com.example.damia.placefinder.activities.MapsActivity;
+import com.example.damia.placefinder.adapters.LocationsAdapter;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+
+
+public class LocationsListFragment extends Fragment{
+
+    private static final String ARG_PARAM1 = "param1";
+
+    private ArrayList<HashMap<String, String>> mParam1;
+
+    GetLocationsData getLocationsData;
+
+    public interface GetLocationsData{
+        ArrayList<HashMap<String, String>> getList();
+    }
+
+    public LocationsListFragment() {
+        // Required empty public constructor
+    }
+
+    public static LocationsListFragment newInstance() {
+        LocationsListFragment fragment = new LocationsListFragment();
+        return fragment;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        getLocationsData = (GetLocationsData) getContext();
+
+        mParam1 = getLocationsData.getList();
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View v = inflater.inflate(R.layout.fragment_locations_list, container, false);
+
+        RecyclerView recyclerView = (RecyclerView)v.findViewById(R.id.recycler_locations);
+        recyclerView.setHasFixedSize(true);
+
+        Log.v("aaaa", mParam1.get(0).get("name"));
+
+        LocationsAdapter adapter = new LocationsAdapter(mParam1);
+        recyclerView.setAdapter(adapter);
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        recyclerView.setLayoutManager(layoutManager);
+
+
+
+        return v;
+    }
+
+}
