@@ -130,25 +130,9 @@ public class GetNearbyPlacesData {
         return placesList;
     }
 
-    Bitmap bitmap;
-
     public void downloadPlaceImage(String imageKey, final Place place){
         String url = buildImgURL(imageKey);
-
-        ImageRequest imageRequest = new ImageRequest(url, new Response.Listener<Bitmap>() {
-            @Override
-            public void onResponse(Bitmap response) {
-                bitmap = response;
-                place.setImage(bitmap);
-                Log.v("IMG", "downloaded image");
-            }
-        }, 0, 0, null, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-
-            }
-        });
-
-        requestQueue.add(imageRequest);
+        place.setImageKey(imageKey);
+        place.setPhotoURL(url);
     }
 }

@@ -11,8 +11,8 @@ import com.example.damia.placefinder.activities.MapsActivity;
  */
 
 public class Place{
-    Bitmap image;
-    String photoID;
+    String imageKey;
+    String photoURL;
     String name;
     String id;
     Double lat;
@@ -20,23 +20,21 @@ public class Place{
 
     GetNearbyPlacesData data;
 
-    public Place(String photoID, String name, String id, Double lat, Double lng, Context context) {
-        this.photoID = photoID;
+    public Place(String photoURL, String name, String id, Double lat, Double lng, Context context) {
+        this.photoURL = photoURL;
         this.name = name;
         this.id = id;
         this.lat = lat;
         this.lng = lng;
         data = GetNearbyPlacesData.getInstance(context);
-        data.downloadPlaceImage(this.photoID, this);
+        data.downloadPlaceImage(this.photoURL, this);
     }
 
-    public Bitmap getImage() {
-        return image;
+    public String getPhotoURL() {
+        return photoURL;
     }
 
-    public String getPhotoID() {
-        return photoID;
-    }
+    public String getImageKey(){ return imageKey ;}
 
     public String getName() {
         return name;
@@ -54,8 +52,12 @@ public class Place{
         return lng;
     }
 
-    public void setImage(Bitmap bitmap){
-        this.image = bitmap;
+    public void setPhotoURL(String photoURL){
+        this.photoURL = photoURL;
+    }
+
+    public void setImageKey(String imageKey){
+        this.imageKey = imageKey;
     }
 
 }

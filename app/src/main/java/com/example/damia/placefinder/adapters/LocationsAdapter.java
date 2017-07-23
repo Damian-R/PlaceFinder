@@ -42,7 +42,7 @@ public class LocationsAdapter extends RecyclerView.Adapter<LocationsViewHolder>{
     @Override
     public void onBindViewHolder(LocationsViewHolder holder, int position) {
         Place location = locations.get(position);
-        holder.updateUI(location);
+        holder.updateUI(location, context);
     }
 
     @Override
