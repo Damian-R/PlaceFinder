@@ -23,8 +23,9 @@ public class LocationsListFragment extends Fragment{
 
     private static final String ARG_PARAM1 = "param1";
 
-    private ArrayList<Place> mParam1;
+    private ArrayList<Place> placesList;
     public LocationsAdapter adapter;
+    RecyclerView recyclerView;
 
     GetLocationsData getLocationsData;
 
@@ -46,8 +47,9 @@ public class LocationsListFragment extends Fragment{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        this.getActivity().findViewById(R.id.container_locations).setVisibility(View.VISIBLE);
         getLocationsData = (GetLocationsData) getContext();
-        mParam1 = getLocationsData.getList();
+        placesList = getLocationsData.getList();
     }
 
     @Override
@@ -55,9 +57,9 @@ public class LocationsListFragment extends Fragment{
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_locations_list, container, false);
-        adapter = new LocationsAdapter(mParam1, getContext());
+        adapter = new LocationsAdapter(placesList, getContext());
 
-        RecyclerView recyclerView = (RecyclerView)v.findViewById(R.id.recycler_locations);
+        recyclerView = (RecyclerView)v.findViewById(R.id.recycler_locations);
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(adapter);
 
@@ -65,6 +67,12 @@ public class LocationsListFragment extends Fragment{
         recyclerView.setLayoutManager(layoutManager);
 
         return v;
+    }
+
+    public void placesChanged(ArrayList<Place> places){
+        adapter = new LocationsAdapter(places, getContext());
+        recyclerView.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
     }
 
 }

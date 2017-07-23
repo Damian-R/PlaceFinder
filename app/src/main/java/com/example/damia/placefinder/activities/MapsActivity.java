@@ -56,6 +56,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private ActionBarDrawerToggle mToggle;
     private NavigationView navigationMenu;
 
+    public FrameLayout locationsContainer;
+
     final int PERMISSION_LOCATION_CODE = 1;
 
     private MarkerOptions userMarker;
@@ -65,6 +67,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     GetNearbyPlacesData data;
     ArrayList<Place> placeList;
+
+    LocationsListFragment fragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +87,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
         navigationMenu = (NavigationView) findViewById(R.id.navigation_menu);
+        locationsContainer = (FrameLayout)findViewById(R.id.container_locations);
 
         mDrawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
         mToggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar, R.string.open, R.string.close){
@@ -119,20 +124,22 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         switch (item.getItemId()){
             case R.id.nav_restaurant: {
                 URLInfo.putString("type", "restaurant");
-                placeList = data.downloadPlacesData(URLInfo);
                 break;
             }
             case R.id.nav_pharmacy: {
                 URLInfo.putString("type", "pharmacy");
-                placeList = data.downloadPlacesData(URLInfo);
                 break;
             }
             case R.id.nav_bank: {
                 URLInfo.putString("type", "bank");
-                placeList = data.downloadPlacesData(URLInfo);
+                break;
+            }
+            case R.id.nav_library: {
+                URLInfo.putString("type", "library");
                 break;
             }
         }
+        placeList = data.downloadPlacesData(URLInfo);
 
         mDrawerLayout.closeDrawer(GravityCompat.START);
         return true;
@@ -236,8 +243,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private void createLocationsListFragment() {
         FragmentManager fm = getSupportFragmentManager();
-        LocationsListFragment fragment = LocationsListFragment.newInstance();
-        fm.beginTransaction().add(R.id.container_locations, fragment).commit();
+        if(fragment == null) {
+            fragment = LocationsListFragment.newInstance();
+            fm.beginTransaction().add(R.id.container_locations, fragment).commit();
+            Log.v("FRAGMENT", "new fragment created");
+        } else {
+            fragment.placesChanged(placeList);
+        }
     }
 
     @Override

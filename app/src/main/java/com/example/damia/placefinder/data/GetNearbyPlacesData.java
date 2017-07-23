@@ -77,6 +77,8 @@ public class GetNearbyPlacesData {
     public ArrayList<Place> downloadPlacesData(Bundle bundle){
         String url = buildPlaceURL(bundle);
 
+        Log.v("URL", url);
+
         placesList = new ArrayList<>();
 
         //TODO make more requests for the next pages of results since each page is limited to 20 places
