@@ -1,7 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="40dp"
-    android:background="@color/colorAccent">
+    android:background="@color/colorAccent"
+    android:layout_height="60dp">
 
+    <TextView
+        android:text="RADIUS"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/radiusTxt"
+        android:gravity="center"
+        android:textStyle="normal|bold"
+        android:textSize="20dp" />
+
+    <SeekBar
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/seekBar" />
 </LinearLayout>

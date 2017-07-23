@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.util.Log;
 
 import com.example.damia.placefinder.activities.MapsActivity;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 /**
  * Created by damia on 7/20/2017.
@@ -17,6 +18,7 @@ public class Place{
     String id;
     Double lat;
     Double lng;
+    MarkerOptions options;
 
     GetNearbyPlacesData data;
 
@@ -35,6 +37,8 @@ public class Place{
     }
 
     public String getImageKey(){ return imageKey ;}
+
+    public MarkerOptions getMarkerOptions(){ return options; }
 
     public String getName() {
         return name;
@@ -58,6 +62,10 @@ public class Place{
 
     public void setImageKey(String imageKey){
         this.imageKey = imageKey;
+    }
+
+    public void setMarkerOptions(MarkerOptions options){
+        this.options = options;
     }
 
 }

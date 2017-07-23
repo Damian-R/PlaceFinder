@@ -20,11 +20,14 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.test.suitebuilder.TestMethod;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.SeekBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.damia.placefinder.R;
@@ -42,6 +45,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
@@ -55,6 +59,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mToggle;
     private NavigationView navigationMenu;
+    private SeekBar seekBar;
+    private TextView radiusTxt;
 
     public FrameLayout locationsContainer;
 
@@ -87,7 +93,27 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
         navigationMenu = (NavigationView) findViewById(R.id.navigation_menu);
+        View headerView = navigationMenu.inflateHeaderView(R.layout.navigation_header);
         locationsContainer = (FrameLayout)findViewById(R.id.container_locations);
+        seekBar = (SeekBar)headerView.findViewById(R.id.seekBar);
+        radiusTxt = (TextView)headerView.findViewById(R.id.radiusTxt);
+
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                radiusTxt.setText("RADIUS: " + (progress * 20 + 500));
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
 
         mDrawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
         mToggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar, R.string.open, R.string.close){
@@ -117,7 +143,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         Log.v("NAV", "Navigation item selected");
         URLInfo = new Bundle();
-        URLInfo.putString("radius", MAP_RADIUS);
+        URLInfo.putString("radius", "" + (seekBar.getProgress() * 20 + 500));
         URLInfo.putString("location", userMarker.getPosition().latitude + "," + userMarker.getPosition().longitude);
 
         mMap.clear();
@@ -235,10 +261,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             // set the marker position and title
             markerOptions.position(new LatLng(lat, lng));
             markerOptions.title(list.get(i).getName());
+            list.get(i).setMarkerOptions(markerOptions);
             mMap.addMarker(markerOptions);
         }
         createLocationsListFragment();
-
     }
 
     private void createLocationsListFragment() {
