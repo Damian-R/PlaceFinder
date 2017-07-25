@@ -77,8 +77,6 @@ public class GetNearbyPlacesData {
     public ArrayList<Place> downloadPlacesData(Bundle bundle){
         String url = buildPlaceURL(bundle);
 
-        Log.v("URL", url);
-
         placesList = new ArrayList<>();
 
         //TODO make more requests for the next pages of results since each page is limited to 20 places
@@ -96,6 +94,7 @@ public class GetNearbyPlacesData {
                         String name = main.getString("name");
                         String lat = loc.getString("lat");
                         String lng = loc.getString("lng");
+                        String address = main.getString("vicinity");
                         String photoID = null;
 
                         try {
@@ -107,7 +106,7 @@ public class GetNearbyPlacesData {
                             Log.v("JSON4", e.getLocalizedMessage());
                         }
 
-                        Place place = new Place(photoID, name, placeID, Double.parseDouble(lat), Double.parseDouble(lng), context);
+                        Place place = new Place(photoID, name, placeID, Double.parseDouble(lat), Double.parseDouble(lng), address, context);
                         Log.v("NAME", name);
 
                         placesList.add(place);

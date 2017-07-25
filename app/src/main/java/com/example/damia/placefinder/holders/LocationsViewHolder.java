@@ -7,6 +7,7 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -15,6 +16,7 @@ import com.bumptech.glide.load.HttpException;
 import com.bumptech.glide.request.RequestListener;
 import com.example.damia.placefinder.R;
 import com.example.damia.placefinder.activities.MapsActivity;
+import com.example.damia.placefinder.adapters.LocationsAdapter;
 import com.example.damia.placefinder.data.GetNearbyPlacesData;
 import com.example.damia.placefinder.data.Place;
 
@@ -39,14 +41,22 @@ public class LocationsViewHolder extends RecyclerView.ViewHolder{
         locationImage = (ImageView) itemView.findViewById(R.id.location_image);
     }
 
-    public void updateUI(Place place, Context context){
+    public void updateUI(final Place place, Context context, final LocationsAdapter.OnItemClickListener listener){
         locationName.setText(place.getName());
+        locationAddress.setText(place.getAddress());
 
         if(place.getImageKey() != null) { // if the place has an image
             Glide.with(context).load(place.getPhotoURL()).into(locationImage); // set the image in RecyclerView using glide
         }else {
             locationImage.setImageDrawable(context.getResources().getDrawable(R.drawable.no_image)); // if there is no image, notify the user
         }
+
+        itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.onItemClick(place);
+            }
+        });
     }
 
 }

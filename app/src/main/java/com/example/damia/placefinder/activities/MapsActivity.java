@@ -31,6 +31,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.damia.placefinder.R;
+import com.example.damia.placefinder.adapters.LocationsAdapter;
 import com.example.damia.placefinder.data.GetNearbyPlacesData;
 import com.example.damia.placefinder.data.Place;
 import com.example.damia.placefinder.fragments.LocationsListFragment;
@@ -52,7 +53,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener, NavigationView.OnNavigationItemSelectedListener
-, GetNearbyPlacesData.OnPlacesLoadedListener, LocationsListFragment.GetLocationsData{
+, GetNearbyPlacesData.OnPlacesLoadedListener, LocationsListFragment.GetLocationsData, LocationsAdapter.OnItemClickListener{
 
     private GoogleMap mMap;
     private GoogleApiClient googleApiClient;
@@ -283,4 +284,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         return placeList;
     }
 
+    @Override
+    public void onItemClick(Place place) {
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(place.getLat() - 0.003, place.getLng())));
+    }
 }
