@@ -243,6 +243,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void placesLoaded(ArrayList<Place> list) {
         Log.v("PLACES", "adding places");
+        mMap.addMarker(userMarker);
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(userMarker.getPosition()));
         MarkerOptions markerOptions = new MarkerOptions();
 
         // build a resource path using the type of place
