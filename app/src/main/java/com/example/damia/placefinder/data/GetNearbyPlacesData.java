@@ -96,6 +96,7 @@ public class GetNearbyPlacesData {
                         String lat = loc.getString("lat");
                         String lng = loc.getString("lng");
                         String address = main.getString("vicinity");
+                        Double rating = null;
                         String photoID = null;
 
                         try {
@@ -103,11 +104,15 @@ public class GetNearbyPlacesData {
                                 JSONArray photos = main.getJSONArray("photos");
                                 photoID = photos.getJSONObject(0).getString("photo_reference");
                             }
+
+                            if(main.getString("rating") != null){
+                                rating = Double.parseDouble(main.getString("rating"));
+                            }
                         }catch (JSONException e){
                             Log.v("JSON4", e.getLocalizedMessage());
                         }
 
-                        Place place = new Place(photoID, name, placeID, Double.parseDouble(lat), Double.parseDouble(lng), address, context);
+                        Place place = new Place(photoID, name, placeID, Double.parseDouble(lat), Double.parseDouble(lng), address, rating, context);
                         Log.v("NAME", name);
 
                         placesList.add(place);

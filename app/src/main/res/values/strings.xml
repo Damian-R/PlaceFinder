@@ -1,12 +1,12 @@
 <resources>
     <string name="app_name">PlaceFinder</string>
-    <string name="title_activity_maps">Map</string>
-    <string name="string_restaurant">Restaurants</string>
-    <string name="string_pharmacy">Pharmacies</string>
-    <string name="string_bank">Banks</string>
-    <string name="string_libraries">Libraries</string>
+    <string name="title_activity_maps">Place Finder</string>
+    <string name="string_restaurant">Restaurant</string>
+    <string name="string_pharmacy">Pharmacy</string>
+    <string name="string_bank">Bank</string>
+    <string name="string_libraries">Library</string>
     <string name="string_grocery">Grocery</string>
-    <string name="string_convenience">Convenience Store</string>
+    <string name="string_convenience">Convenience</string>
     <string name="string_bar">Bar</string>
     <string name="string_laundry">Laundry</string>
     <string name="string_school">School</string>

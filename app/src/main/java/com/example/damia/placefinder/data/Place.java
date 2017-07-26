@@ -19,16 +19,18 @@ public class Place{
     String address;
     Double lat;
     Double lng;
+    Double rating;
     MarkerOptions options;
 
     GetNearbyPlacesData data;
 
-    public Place(String photoURL, String name, String id, Double lat, Double lng, String address, Context context) {
+    public Place(String photoURL, String name, String id, Double lat, Double lng, String address, Double rating, Context context) {
         this.photoURL = photoURL;
         this.name = name;
         this.id = id;
         this.lat = lat;
         this.lng = lng;
+        this.rating = rating;
         this.address = address;
         data = GetNearbyPlacesData.getInstance(context);
         data.downloadPlaceImage(this.photoURL, this);
@@ -57,6 +59,8 @@ public class Place{
     public Double getLng() {
         return lng;
     }
+
+    public Double getRating(){ return rating; }
 
     public String getAddress(){ return address; }
 
