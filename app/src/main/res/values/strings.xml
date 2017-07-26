@@ -5,6 +5,11 @@
     <string name="string_pharmacy">Pharmacies</string>
     <string name="string_bank">Banks</string>
     <string name="string_libraries">Libraries</string>
+    <string name="string_grocery">Grocery</string>
+    <string name="string_convenience">Convenience Store</string>
+    <string name="string_bar">Bar</string>
+    <string name="string_laundry">Laundry</string>
+    <string name="string_school">School</string>
     <string name="open">Open</string>
     <string name="close">Close</string>
 

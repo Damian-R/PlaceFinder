@@ -35,6 +35,7 @@ public class GetNearbyPlacesData {
     private final String URL_LOCATION = "location=";
     private final String URL_RADIUS = "&radius=";
     private final String URL_TYPE = "&type=";
+    private final String URL_OPEN = "&opennow=true";
     private final String URL_SENSOR = "&sensor=true";
     private final String URL_KEY = "&key=AIzaSyA0MtUzpa2HeoONIHTt22T6P9SxTUXPbjA";
 
@@ -61,7 +62,7 @@ public class GetNearbyPlacesData {
     }
 
     private String buildPlaceURL(Bundle bundle){
-        String url = URL_BASE_PLACES + URL_LOCATION + bundle.getString("location") + URL_RADIUS + bundle.getString("radius") + URL_TYPE + bundle.getString("type") + URL_SENSOR  + URL_KEY;
+        String url = URL_BASE_PLACES + URL_LOCATION + bundle.getString("location") + URL_RADIUS + bundle.getString("radius") + URL_TYPE + bundle.getString("type") + URL_SENSOR + URL_OPEN + URL_KEY;
         Log.v("URL", url);
         return url;
     }

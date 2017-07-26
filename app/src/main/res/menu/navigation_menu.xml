@@ -13,6 +13,26 @@
             android:title="@string/string_bank"
             android:icon="@drawable/ic_account_balance_black_24dp"></item>
 
+        <item android:id="@+id/nav_grocery_or_supermarket"
+            android:title="@string/string_grocery"
+            android:icon="@drawable/ic_local_grocery_store_black_24dp"></item>
+
+        <item android:id="@+id/nav_convenience_store"
+            android:title="@string/string_convenience"
+            android:icon="@drawable/ic_store_black_24dp"></item>
+
+        <item android:id="@+id/nav_bar"
+            android:title="@string/string_bar"
+            android:icon="@drawable/ic_local_bar_black_24dp"></item>
+
+        <item android:id="@+id/nav_laundry"
+            android:title="@string/string_laundry"
+            android:icon="@drawable/ic_local_laundry_service_black_24dp"></item>
+
+        <item android:id="@+id/nav_school"
+            android:title="@string/string_school"
+            android:icon="@drawable/ic_school_black_24dp"></item>
+
         <item android:id="@+id/nav_library"
             android:title="@string/string_libraries"
             android:icon="@drawable/ic_local_library_black_24dp"></item>

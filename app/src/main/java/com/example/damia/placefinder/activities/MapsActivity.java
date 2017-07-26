@@ -49,6 +49,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -69,8 +70,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private MarkerOptions userMarker;
     private Bundle URLInfo;
-
-    private final String MAP_RADIUS = "500";
 
     GetNearbyPlacesData data;
     ArrayList<Place> placeList;
@@ -163,6 +162,26 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
             case R.id.nav_library: {
                 URLInfo.putString("type", "library");
+                break;
+            }
+            case R.id.nav_grocery_or_supermarket: {
+                URLInfo.putString("type", "grocery_or_supermarket");
+                break;
+            }
+            case R.id.nav_convenience_store: {
+                URLInfo.putString("type", "convenience_store");
+                break;
+            }
+            case R.id.nav_bar: {
+                URLInfo.putString("type", "bar");
+                break;
+            }
+            case R.id.nav_laundry: {
+                URLInfo.putString("type", "laundry");
+                break;
+            }
+            case R.id.nav_school: {
+                URLInfo.putString("type", "school");
                 break;
             }
         }
@@ -288,6 +307,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void onItemClick(Place place) {
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(place.getLat() - 0.003, place.getLng())));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(place.getLat(), place.getLng())));
     }
 }
