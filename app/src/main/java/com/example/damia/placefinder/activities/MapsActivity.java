@@ -283,8 +283,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             // set the marker position and title
             markerOptions.position(new LatLng(lat, lng));
             markerOptions.title(list.get(i).getName());
-            list.get(i).setMarkerOptions(markerOptions);
-            mMap.addMarker(markerOptions);
+            Marker marker = mMap.addMarker(markerOptions);
+            list.get(i).setMarker(marker);
+
         }
         createLocationsListFragment();
     }
@@ -308,5 +309,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onItemClick(Place place) {
         mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(place.getLat(), place.getLng())));
+        place.getMarker().showInfoWindow();
     }
 }

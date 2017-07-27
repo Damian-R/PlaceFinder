@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
@@ -65,7 +66,8 @@ public class LocationsViewHolder extends RecyclerView.ViewHolder{
             Double rating = place.getRating();
             updateStarRatings(rating, context);
         } else {
-            locationRating.setText("N/A");
+            locationRating.setText("No Ratings");
+            locationRating.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13);
             starOne.setVisibility(View.INVISIBLE);
             starTwo.setVisibility(View.INVISIBLE);
             starThree.setVisibility(View.INVISIBLE);
