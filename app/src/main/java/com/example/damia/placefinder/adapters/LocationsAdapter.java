@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 
+import com.bumptech.glide.Glide;
 import com.example.damia.placefinder.R;
 import com.example.damia.placefinder.data.GetNearbyPlacesData;
 import com.example.damia.placefinder.data.Place;
@@ -46,7 +47,7 @@ public class LocationsAdapter extends RecyclerView.Adapter<LocationsViewHolder>{
 
     @Override
     public void onBindViewHolder(LocationsViewHolder holder, int position) {
-        Place location = locations.get(position);
+        final Place location = locations.get(position);
         holder.updateUI(location, context, listener);
     }
 
@@ -55,4 +56,8 @@ public class LocationsAdapter extends RecyclerView.Adapter<LocationsViewHolder>{
         return locations.size();
     }
 
+    @Override
+    public int getItemViewType(int position) {
+        return position;
+    }
 }
