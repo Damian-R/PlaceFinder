@@ -5,7 +5,7 @@
     android:layout_height="60dp">
 
     <TextView
-        android:text="RADIUS"
+        android:text="RADIUS: 500m"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/radiusTxt"

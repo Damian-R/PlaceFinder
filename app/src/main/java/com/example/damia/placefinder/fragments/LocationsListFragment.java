@@ -21,8 +21,6 @@ import java.util.HashMap;
 
 public class LocationsListFragment extends Fragment{
 
-    private static final String ARG_PARAM1 = "param1";
-
     private ArrayList<Place> placesList;
     public LocationsAdapter adapter;
     RecyclerView recyclerView;
@@ -47,7 +45,6 @@ public class LocationsListFragment extends Fragment{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        this.getActivity().findViewById(R.id.container_locations).setVisibility(View.VISIBLE);
         getLocationsData = (GetLocationsData) getContext();
         placesList = getLocationsData.getList();
     }
@@ -56,6 +53,7 @@ public class LocationsListFragment extends Fragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        this.getActivity().findViewById(R.id.container_locations).setVisibility(View.VISIBLE);
         View v = inflater.inflate(R.layout.fragment_locations_list, container, false);
         adapter = new LocationsAdapter(placesList, getContext());
 
@@ -65,6 +63,10 @@ public class LocationsListFragment extends Fragment{
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
+
+        if(placesList.size() == 0){
+            this.getActivity().findViewById(R.id.container_locations).setVisibility(View.GONE);
+        }
 
         return v;
     }

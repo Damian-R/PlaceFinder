@@ -1,6 +1,8 @@
 package com.example.damia.placefinder.activities;
 
 import android.Manifest;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -25,6 +27,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -63,6 +66,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private NavigationView navigationMenu;
     private SeekBar seekBar;
     private TextView radiusTxt;
+    private Button testLocation;
 
     public FrameLayout locationsContainer;
 
@@ -70,6 +74,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private MarkerOptions userMarker;
     private Bundle URLInfo;
+    private boolean nextTapAddMarker = false;
 
     GetNearbyPlacesData data;
     ArrayList<Place> placeList;
@@ -97,11 +102,23 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         locationsContainer = (FrameLayout)findViewById(R.id.container_locations);
         seekBar = (SeekBar)headerView.findViewById(R.id.seekBar);
         radiusTxt = (TextView)headerView.findViewById(R.id.radiusTxt);
+        testLocation = (Button)findViewById(R.id.testLocationButton);
+
+        testLocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!nextTapAddMarker) {
+                    nextTapAddMarker = true;
+                    testLocation.setText("Tap to add a marker...");
+                    testLocation.setCompoundDrawables(null, null, null, null);
+                }
+            }
+        });
 
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                radiusTxt.setText("RADIUS: " + (progress * 20 + 500));
+                radiusTxt.setText("RADIUS: " + (progress * 20 + 500) + "m");
             }
 
             @Override
@@ -191,7 +208,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         return true;
     }
 
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if(mToggle.onOptionsItemSelected(item)){
@@ -203,6 +219,19 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng latLng) {
+                if(nextTapAddMarker){
+                    addUserMarker(latLng);
+                    nextTapAddMarker = false;
+                    testLocation.setText("Add Test Location");
+                    testLocation.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.ic_add_location_black_24dp), null, null, null);
+                } else {
+
+                }
+            }
+        });
     }
 
     @Override
@@ -238,9 +267,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void onLocationChanged(Location location) {
-        userMarker = new MarkerOptions().position(new LatLng(location.getLatitude(), location.getLongitude()));
-        mMap.addMarker(userMarker);
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(userMarker.getPosition(), 15));
+        addUserMarker(new LatLng(location.getLatitude(), location.getLongitude()));
     }
 
     public void initializeMap(){
@@ -288,6 +315,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         }
         createLocationsListFragment();
+
     }
 
     private void createLocationsListFragment() {
@@ -298,7 +326,19 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             Log.v("FRAGMENT", "new fragment created");
         } else {
             fragment.placesChanged(placeList);
+            if(locationsContainer.getVisibility() == View.GONE)
+                locationsContainer.setVisibility(View.VISIBLE);
         }
+
+        if(placeList.size() == 0){
+            locationsContainer.setVisibility(View.GONE);
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage("No open locations of type " + URLInfo.getString("type") + " found within " + URLInfo.getString("radius") + " meters");
+            AlertDialog alert = builder.create();
+            alert.setCanceledOnTouchOutside(true);
+            alert.show();
+        }
+
     }
 
     @Override
@@ -306,9 +346,18 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         return placeList;
     }
 
+    private void addUserMarker(LatLng latLng){
+        mMap.clear();
+        userMarker = new MarkerOptions().position(latLng);
+        userMarker.title("You are here");
+        mMap.addMarker(userMarker);
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(userMarker.getPosition(), 15));
+    }
+
+    // called when a place info card is tapped
     @Override
     public void onItemClick(Place place) {
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(place.getLat(), place.getLng())));
+        mMap.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(place.getLat(), place.getLng())));
         place.getMarker().showInfoWindow();
     }
 }

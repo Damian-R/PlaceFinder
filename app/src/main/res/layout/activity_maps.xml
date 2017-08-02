@@ -15,32 +15,47 @@
 
     </android.support.design.widget.NavigationView>
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
-        <fragment
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:tools="http://schemas.android.com/tools"
-            android:id="@+id/map"
-            android:name="com.google.android.gms.maps.SupportMapFragment"
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="Add test location"
+            android:layout_marginRight="60dp"
+            android:layout_marginLeft="60dp"
+            android:drawableLeft="@drawable/ic_add_location_black_24dp"
+            android:id="@+id/testLocationButton"/>
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:context="com.example.damia.placefinder.activities.MapsActivity"
-            android:layout_weight="1"/>
+            android:orientation="vertical">
 
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/container_locations"
-            android:layout_alignParentBottom="true"
-            android:background="@color/cardview_light_background"
-            android:visibility="gone"
-            android:layout_weight="1">
+            <fragment
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:id="@+id/map"
+                android:name="com.google.android.gms.maps.SupportMapFragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:context="com.example.damia.placefinder.activities.MapsActivity"
+                android:layout_weight="1"/>
 
-        </FrameLayout>
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/container_locations"
+                android:layout_alignParentBottom="true"
+                android:background="@color/cardview_light_background"
+                android:visibility="gone"
+                android:layout_weight="1">
 
-    </LinearLayout>
+            </FrameLayout>
+
+        </LinearLayout>
+
+    </RelativeLayout>
 
 </android.support.v4.widget.DrawerLayout>
